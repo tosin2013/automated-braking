@@ -1,9 +1,10 @@
-apiVersion: modelregistry.opendatahub.io/v1beta1
+apiVersion: modelregistry.opendatahub.io/v1alpha1
 kind: ModelRegistry
 metadata:
   annotations:
     openshift.io/description: ''
     openshift.io/display-name: distance-prediction
+    argocd.argoproj.io/sync-wave: "0"
   name: distance-prediction
   namespace: rhoai-model-registries
   finalizers:

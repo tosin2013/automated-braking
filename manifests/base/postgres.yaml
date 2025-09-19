@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
   name: data-distance-prediction
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 data:
   init.sql: |
     \c distance
@@ -36,6 +38,8 @@ metadata:
     component: postgresql-data
   name: postgresql-data
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   accessModes:
   - ReadWriteOnce
@@ -48,6 +52,8 @@ kind: Service
 metadata:
   name: postgresql
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   ports:
     - name: postgresql
@@ -65,6 +71,8 @@ kind: Deployment
 metadata:
   name: postgresql
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   replicas: 1
   selector:
@@ -122,6 +130,8 @@ kind: Job
 metadata:
   name: create-database
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   backoffLimit: 5
   selector: {}

@@ -11,6 +11,8 @@ metadata:
     component: mysql-data
   name: mysql-data
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   accessModes:
   - ReadWriteOnce
@@ -23,6 +25,8 @@ kind: Service
 metadata:
   name: mysql
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   ports:
     - name: mysql
@@ -40,6 +44,8 @@ kind: Deployment
 metadata:
   name: mysql
   namespace: distance-prediction
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   strategy:
     type: Recreate

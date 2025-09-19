@@ -2,6 +2,7 @@
 
 ## Setup
 
+
 ```sh
 oc apply -f manifests/
 ```
@@ -26,6 +27,21 @@ Finally we create workbenches:
 cd workbenches
 helm install workbenches .
 cd ...
+```
+
+## for ArgoCD ensure RHACM with helm 
+```sh
+oc apply -k https://github.com/tosin2013/sno-quickstarts/gitops/cluster-config/openshift-gitops
+```
+
+### To deploy a development env
+```
+ oc apply -f argocd/app-development.yaml
+```
+
+### To deploy a production env
+```
+ oc apply -f argocd/app-production.yaml
 ```
 
 ### Workbenches
