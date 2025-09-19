@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: automated-braking-dev
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: automated-braking-dev
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/overlays/development
+    repoURL: https://github.com/tosin2013/automated-braking.git
+    targetRevision: main
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
