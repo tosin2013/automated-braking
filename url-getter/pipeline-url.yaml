@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: url-getter-sa
+  namespace: distance-prediction
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: rhoai-installer-crb
+subjects:
+  - kind: ServiceAccount
+    name: url-getter-sa
+    namespace: distance-prediction
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: url-getter-job
+  namespace: distance-prediction
+spec:
+  template:
+    spec:
+      containers:
+        - name: installer
+          image: registry.redhat.io/openshift4/ose-cli:latest
+          command: ["/bin/bash", "-c", "/scripts/create_secret.sh"]
+          volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+      volumes:
+        - name: scripts
+          configMap:
+            name: pieline-url-cm
+            defaultMode: 0755
+      restartPolicy: Never
+      serviceAccountName: url-getter-sa
+  backoffLimit: 1

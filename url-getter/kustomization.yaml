@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- pipeline-url.yaml
+
+configMapGenerator:
+- name: pieline-url-cm
+  namespace: distance-prediction
+  files:
+  - scripts/create_secret.sh

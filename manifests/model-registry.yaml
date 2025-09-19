@@ -1,0 +1,29 @@
+apiVersion: modelregistry.opendatahub.io/v1beta1
+kind: ModelRegistry
+metadata:
+  annotations:
+    openshift.io/description: ''
+    openshift.io/display-name: distance-prediction
+  name: distance-prediction
+  namespace: rhoai-model-registries
+  finalizers:
+    - modelregistry.opendatahub.io/finalizer
+spec:
+  grpc:
+    port: 9090
+  mysql:
+    database: modelregistry
+    host: mysql.distance-prediction.svc.cluster.local
+    passwordSecret:
+      key: database-password
+      name: distance-prediction-db
+    port: 3306
+    skipDBCreation: false
+    username: registryuser
+  oauthProxy:
+    port: 8443
+    routePort: 443
+    serviceRoute: enabled
+  rest:
+    port: 8080
+    serviceRoute: disabled
