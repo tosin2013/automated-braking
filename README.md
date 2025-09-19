@@ -14,6 +14,7 @@ oc apply -n distance-prediction -f https://github.com/rh-aiservices-bu/fraud-det
 Next we enable pipelines:
 ```sh
 oc apply -f pipeline-server/
+```
 
 Then we get the URL of the cluster for use in setting up workbenches and calling pipelines:
 ```sh
