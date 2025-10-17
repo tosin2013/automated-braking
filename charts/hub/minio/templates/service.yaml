@@ -1,27 +1,22 @@
-{{- if .Values.enabled }}
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.service.name }}
-  namespace: {{ .Values.namespace }}
-  annotations:
-    {{- range $key, $val := .Values.annotations }}
-    {{ $key }}: {{ $val | quote }}
-    {{- end }}
+  name: minio
+  namespace: {{ .Values.namespace | default "distance-prediction" }}
+  labels:
+    app: minio
+    app.kubernetes.io/name: minio
+    app.kubernetes.io/part-of: automated-braking
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - name: api
-      port: {{ .Values.service.port }}
-      targetPort: api
+    - name: s3
+      port: 9000
+      targetPort: 9000
       protocol: TCP
     - name: console
-      port: {{ .Values.service.consolePort }}
-      targetPort: console
+      port: 9001
+      targetPort: 9001
       protocol: TCP
   selector:
     app: minio
-{{- end }}
-
-
