@@ -15,9 +15,9 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  # Route host: <route-name>-<namespace>.apps.<apps-domain>
-  # Uses appsDomain variable for cluster portability
-  host: minio-s3-{{ .Values.namespace | default "distance-prediction" }}.apps.{{ .Values.route.appsDomain | default "cluster.local" }}
+  # Route host: <route-name>-<namespace>.<apps-domain>
+  # appsDomain already includes "apps." prefix
+  host: minio-s3-{{ .Values.namespace | default "distance-prediction" }}.{{ .Values.route.appsDomain | default "apps.cluster.local" }}
   port:
     targetPort: s3        # MinIO S3 API on port 9000
   tls:
@@ -43,9 +43,9 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  # Route host: <route-name>-<namespace>.apps.<apps-domain>
-  # Uses appsDomain variable for cluster portability
-  host: minio-console-{{ .Values.namespace | default "distance-prediction" }}.apps.{{ .Values.route.appsDomain | default "cluster.local" }}
+  # Route host: <route-name>-<namespace>.<apps-domain>
+  # appsDomain already includes "apps." prefix
+  host: minio-console-{{ .Values.namespace | default "distance-prediction" }}.{{ .Values.route.appsDomain | default "apps.cluster.local" }}
   port:
     targetPort: s3  # Console served from S3 API (port 9000)
   tls:
