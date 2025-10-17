@@ -9,9 +9,9 @@ global:
     installPlanApproval: Automatic
   
   git:
-    repoURL: https://github.com/tosin2013/automated-braking.git
+    repoURL: https://gitea-with-admin-gitea.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com/user1/automated-braking.git
     revision: main
-    originRepo: https://github.com/tosin2013/automated-braking.git
+    originRepo: https://gitea-with-admin-gitea.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com/user1/automated-braking.git
   
   # Cluster information (from oc cluster-info)
   datacenter:
