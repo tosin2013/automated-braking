@@ -29,3 +29,6 @@ global:
   targetRevision: "4.18"
 
 
+
+urls:
+  BASE_URL: https://automated-braking.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
