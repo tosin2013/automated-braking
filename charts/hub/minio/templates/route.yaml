@@ -29,7 +29,7 @@ spec:
     weight: 100
   wildcardPolicy: None
 ---
-# Console Route (MinIO console served from S3 API endpoint)
+# Console Route (MinIO web console)
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -47,7 +47,7 @@ spec:
   # appsDomain already includes "apps." prefix
   host: minio-console-{{ .Values.namespace | default "distance-prediction" }}.{{ .Values.route.appsDomain | default "apps.cluster.local" }}
   port:
-    targetPort: s3  # Console served from S3 API (port 9000)
+    targetPort: console  # MinIO Console on port 9001
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
