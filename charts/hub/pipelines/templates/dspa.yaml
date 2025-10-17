@@ -1,0 +1,39 @@
+{{- if .Values.enabled }}
+---
+apiVersion: datasciencepipelinesapplications.opendatahub.io/v1
+kind: DataSciencePipelinesApplication
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    {{- range $key, $val := .Values.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  labels:
+    {{- range $key, $val := .Values.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  finalizers:
+    - datasciencepipelinesapplications.opendatahub.io/finalizer
+spec:
+  apiServer:
+    {{- toYaml .Values.apiServer | nindent 4 }}
+  
+  database:
+    {{- toYaml .Values.database | nindent 4 }}
+  
+  dspVersion: {{ .Values.dspVersion }}
+  
+  objectStorage:
+    {{- toYaml .Values.objectStorage | nindent 4 }}
+  
+  persistenceAgent:
+    {{- toYaml .Values.persistenceAgent | nindent 4 }}
+  
+  podToPodTLS: {{ .Values.podToPodTLS }}
+  
+  scheduledWorkflow:
+    {{- toYaml .Values.scheduledWorkflow | nindent 4 }}
+{{- end }}
+
+

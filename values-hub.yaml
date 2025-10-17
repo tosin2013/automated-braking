@@ -1,0 +1,105 @@
+---
+clusterGroup:
+  name: hub
+  isHubCluster: true
+  
+  # Namespaces to create
+  namespaces:
+    - distance-prediction
+    - rhoai-model-registries
+  
+  # Operator subscriptions
+  subscriptions:
+    # OpenShift GitOps is already installed cluster-wide
+    # RHOAI is already installed cluster-wide
+  
+  # Applications to deploy
+  applications:
+    mysql:
+      name: mysql
+      namespace: distance-prediction
+      project: default
+      path: charts/hub/mysql
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+    
+    minio:
+      name: minio
+      namespace: distance-prediction
+      project: default
+      path: charts/hub/minio
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+    
+    postgresql:
+      name: postgresql
+      namespace: distance-prediction
+      project: default
+      path: charts/hub/postgresql
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+    
+    model-registry:
+      name: model-registry
+      namespace: rhoai-model-registries
+      project: default
+      path: charts/hub/model-registry
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+    
+    data-science-pipelines:
+      name: dspa
+      namespace: distance-prediction
+      project: default
+      path: charts/hub/pipelines
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+    
+    workbenches:
+      name: workbenches
+      namespace: distance-prediction
+      project: default
+      path: charts/hub/workbenches
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+  
+  # Project-specific configuration
+  projectConfig:
+    mlPipeline:
+      enabled: true
+      storage:
+        type: s3
+        bucket: pipeline-artifacts
+    
+    modelRegistry:
+      enabled: true
+      backend: mysql
+      version: "8.3.0"
+    
+    workbenches:
+      - name: data-generation
+        image: quay.io/jupyter/datascience-notebook:latest
+        resources:
+          requests:
+            cpu: "1"
+            memory: 4Gi
+      
+      - name: build-model
+        image: quay.io/jupyter/datascience-notebook:latest
+        resources:
+          requests:
+            cpu: "2"
+            memory: 8Gi
+

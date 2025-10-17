@@ -1,0 +1,20 @@
+apiVersion: v2
+name: model-registry
+description: RHOAI Model Registry for ML model governance and versioning
+type: application
+version: 0.1.0
+appVersion: "v1alpha1"
+home: https://github.com/tosin2013/automated-braking
+sources:
+  - https://github.com/tosin2013/automated-braking
+maintainers:
+  - name: Automated Braking Team
+keywords:
+  - model-registry
+  - ml
+  - rhoai
+  - model-governance
+annotations:
+  category: Machine Learning
+
+

@@ -1,0 +1,20 @@
+apiVersion: v2
+name: postgresql
+description: PostgreSQL database for automated braking training data storage
+type: application
+version: 0.1.0
+appVersion: "16"
+home: https://github.com/tosin2013/automated-braking
+sources:
+  - https://github.com/tosin2013/automated-braking
+maintainers:
+  - name: Automated Braking Team
+keywords:
+  - postgresql
+  - database
+  - training-data
+  - ml-data
+annotations:
+  category: Database
+
+

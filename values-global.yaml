@@ -1,0 +1,31 @@
+---
+global:
+  pattern: automated-braking
+  namespace: distance-prediction
+  
+  options:
+    useCSV: false
+    syncPolicy: Automatic
+    installPlanApproval: Automatic
+  
+  git:
+    repoURL: https://github.com/tosin2013/automated-braking.git
+    revision: main
+    originRepo: https://github.com/tosin2013/automated-braking.git
+  
+  # Cluster information (from oc cluster-info)
+  datacenter:
+    clustername: cluster-fzqdg
+    domain: fzqdg.sandbox3272.opentlc.com
+  
+  # Image registry settings
+  imageRegistry:
+    hostname: quay.io
+  
+  # Pattern version
+  version: "1.0.0"
+  
+  # Target OpenShift version
+  targetRevision: "4.18"
+
+

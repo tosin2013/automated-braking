@@ -1,0 +1,62 @@
+---
+# MinIO S3-compatible storage for Automated Braking Pattern
+enabled: true
+
+namespace: distance-prediction
+
+# MinIO configuration
+replicas: 1
+
+image:
+  repository: quay.io/minio/minio
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Service configuration
+service:
+  name: minio-s3
+  port: 9000
+  consolePort: 9001
+  type: ClusterIP
+
+# Storage
+persistence:
+  enabled: true
+  size: 20Gi
+  storageClass: ""  # Use default
+  accessMode: ReadWriteOnce
+
+# Buckets to create
+buckets:
+  - pipeline-artifacts
+  - model-artifacts
+
+# Credentials (from secrets)
+auth:
+  rootUser: minio
+  rootPassword: minio123  # Change in production!
+
+# Route configuration
+route:
+  enabled: true
+  tls: true
+
+# Resource limits
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+# Labels and annotations
+labels:
+  app: minio
+  app.kubernetes.io/name: minio
+  app.kubernetes.io/part-of: automated-braking
+
+annotations:
+  argocd.argoproj.io/sync-wave: "0"  # Deploy early with MySQL
+
+

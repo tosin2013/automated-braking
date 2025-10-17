@@ -1,0 +1,54 @@
+{{- if .Values.enabled }}
+---
+apiVersion: components.platform.opendatahub.io/v1alpha1
+kind: ModelRegistry
+metadata:
+  name: {{ .Values.name }}
+  namespace: {{ .Values.namespace }}
+  annotations:
+    {{- range $key, $val := .Values.annotations }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  labels:
+    {{- range $key, $val := .Values.labels }}
+    {{ $key }}: {{ $val | quote }}
+    {{- end }}
+  {{- if .Values.mysql.passwordSecret }}
+  finalizers:
+    - modelregistry.opendatahub.io/finalizer
+  {{- end }}
+spec:
+  {{- if .Values.grpc.enabled }}
+  grpc:
+    port: {{ .Values.grpc.port }}
+  {{- end }}
+  
+  {{- if .Values.mysql.enabled }}
+  mysql:
+    database: {{ .Values.mysql.database }}
+    host: {{ .Values.mysql.host }}
+    port: {{ .Values.mysql.port }}
+    skipDBCreation: {{ .Values.mysql.skipDBCreation }}
+    username: {{ .Values.mysql.username }}
+    {{- if .Values.mysql.passwordSecret }}
+    passwordSecret:
+      key: {{ .Values.mysql.passwordSecret.key }}
+      name: {{ .Values.mysql.passwordSecret.name }}
+    {{- end }}
+  {{- end }}
+  
+  {{- if .Values.oauthProxy.enabled }}
+  oauthProxy:
+    port: {{ .Values.oauthProxy.port }}
+    routePort: {{ .Values.oauthProxy.routePort }}
+    serviceRoute: {{ .Values.oauthProxy.serviceRoute }}
+  {{- end }}
+  
+  {{- if .Values.rest.enabled }}
+  rest:
+    port: {{ .Values.rest.port }}
+    serviceRoute: {{ .Values.rest.serviceRoute }}
+  {{- end }}
+{{- end }}
+
+

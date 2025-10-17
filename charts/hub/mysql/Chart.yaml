@@ -1,0 +1,19 @@
+apiVersion: v2
+name: mysql
+description: MySQL database for Model Registry backend
+type: application
+version: 0.1.0
+appVersion: "8.3.0"
+home: https://github.com/tosin2013/automated-braking
+sources:
+  - https://github.com/tosin2013/automated-braking
+maintainers:
+  - name: Automated Braking Team
+keywords:
+  - mysql
+  - database
+  - model-registry
+annotations:
+  category: Database
+
+

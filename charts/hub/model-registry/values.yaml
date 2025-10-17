@@ -1,0 +1,55 @@
+---
+# Model Registry values for Automated Braking Pattern
+enabled: true
+
+# Model Registry metadata
+name: distance-prediction
+displayName: "distance-prediction"
+description: "Model Registry for automated braking distance prediction models"
+
+# Namespace for Model Registry
+namespace: rhoai-model-registries
+
+# MySQL backend configuration
+mysql:
+  enabled: true
+  host: mysql.distance-prediction.svc.cluster.local
+  port: 3306
+  database: modelregistry
+  username: registryuser
+  skipDBCreation: false
+  passwordSecret:
+    name: distance-prediction-db
+    key: database-password
+
+# gRPC API configuration
+grpc:
+  enabled: true
+  port: 9090
+
+# REST API configuration
+rest:
+  enabled: true
+  port: 8080
+  # Disable service route by default (use gRPC with OAuth)
+  serviceRoute: disabled
+
+# OAuth Proxy configuration
+oauthProxy:
+  enabled: true
+  port: 8443
+  routePort: 443
+  serviceRoute: enabled
+
+# Labels and annotations
+labels:
+  app: model-registry
+  app.kubernetes.io/name: model-registry
+  app.kubernetes.io/part-of: automated-braking
+
+annotations:
+  openshift.io/description: "Model Registry for automated braking ML models"
+  openshift.io/display-name: "distance-prediction"
+  argocd.argoproj.io/sync-wave: "1"  # After MySQL (wave 0)
+
+

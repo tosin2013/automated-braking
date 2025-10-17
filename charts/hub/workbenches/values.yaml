@@ -1,0 +1,56 @@
+---
+# Workbenches values for Automated Braking Pattern
+enabled: true
+
+namespace: distance-prediction
+
+# Labels and annotations
+labels:
+  app: workbenches
+  app.kubernetes.io/name: workbenches
+  app.kubernetes.io/part-of: automated-braking
+
+annotations:
+  argocd.argoproj.io/sync-wave: "3"  # After DSPA
+
+# Workbench definitions
+workbenches:
+  - name: data-generation
+    displayName: "Data Generation Workbench"
+    description: "Generate training data for distance prediction"
+    image: quay.io/jupyter/datascience-notebook:latest
+    resources:
+      requests:
+        cpu: "1"
+        memory: 4Gi
+      limits:
+        cpu: "2"
+        memory: 8Gi
+    env:
+      - name: JUPYTER_ENABLE_LAB
+        value: "yes"
+  
+  - name: build-model
+    displayName: "Build Model Workbench"
+    description: "Train and register ML models"
+    image: quay.io/jupyter/datascience-notebook:latest
+    resources:
+      requests:
+        cpu: "2"
+        memory: 8Gi
+      limits:
+        cpu: "4"
+        memory: 16Gi
+    env:
+      - name: JUPYTER_ENABLE_LAB
+        value: "yes"
+
+# Storage configuration
+storage:
+  size: 20Gi
+  storageClass: ""  # Use default
+
+# Base URLs and environment config
+urls:
+  BASE_URL: "https://cluster-fzqdg.fzqdg.sandbox3272.opentlc.com"
+

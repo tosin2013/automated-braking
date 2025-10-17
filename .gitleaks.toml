@@ -1,0 +1,75 @@
+# GitLeaks Configuration for Automated Braking Pattern
+title = "GitLeaks config for Validated Patterns"
+
+# Extend default rules
+[extend]
+useDefault = true
+
+# Allowlist configuration
+[allowlist]
+description = "Allowlist for safe files"
+paths = [
+    # Template files (safe - contain placeholders)
+    '''values-secret\.yaml\.template$''',
+    '''\.template$''',
+    '''\.example$''',
+    
+    # Documentation files
+    '''README\.md$''',
+    '''docs/.*\.md$''',
+    '''DEPLOYMENT.*\.md$''',
+    '''MIGRATION.*\.md$''',
+    '''CHARTS.*\.md$''',
+    '''S3_STORAGE.*\.md$''',
+    
+    # Old deprecated manifests (reference only)
+    '''manifests/base/''',
+    
+    # Common framework (git submodule)
+    '''common/''',
+    
+    # GitLeaks config itself
+    '''\.gitleaks\.toml$''',
+    '''\.gitleaksignore$''',
+]
+
+regexes = [
+    # Allow passwords with warning comments
+    '''Change in production''',
+    '''CHANGEME''',
+    '''AUTO_GENERATED''',
+    '''# Default password''',
+    '''# Change this''',
+]
+
+# Custom rules for pattern-specific secrets
+[[rules]]
+id = "validated-patterns-secret-file"
+description = "Detect actual values-secret.yaml files (not templates)"
+path = '''values-secret.*\.yaml$'''
+[rules.allowlist]
+paths = [
+    '''values-secret\.yaml\.template$''',
+]
+
+[[rules]]
+id = "openshift-auth-token"
+description = "OpenShift authentication token"
+regex = '''(oc login.*--token=|OPENSHIFT_TOKEN=)[A-Za-z0-9_-]{20,}'''
+tags = ["openshift", "token"]
+
+[[rules]]
+id = "argocd-credentials"
+description = "ArgoCD admin password"
+regex = '''(argocd.*password|ARGOCD_PASSWORD).*['"]\w{8,}['"]'''
+tags = ["argocd", "password"]
+
+[[rules]]
+id = "kubernetes-secret-base64"
+description = "Kubernetes Secret with base64 encoded data"
+regex = '''data:\s*\n\s+[A-Za-z0-9_-]+:\s*[A-Za-z0-9+/=]{40,}'''
+tags = ["secret", "kubernetes"]
+[rules.allowlist]
+paths = [
+    '''manifests/base/database-creds\.yaml$''',
+]

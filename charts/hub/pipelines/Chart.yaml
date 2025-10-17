@@ -1,0 +1,21 @@
+apiVersion: v2
+name: pipelines
+description: Data Science Pipelines Application (DSPA) for ML workflow orchestration
+type: application
+version: 0.1.0
+appVersion: "v2"
+home: https://github.com/tosin2013/automated-braking
+sources:
+  - https://github.com/tosin2013/automated-braking
+maintainers:
+  - name: Automated Braking Team
+keywords:
+  - dspa
+  - pipelines
+  - kubeflow
+  - rhoai
+  - ml-pipelines
+annotations:
+  category: Machine Learning
+
+

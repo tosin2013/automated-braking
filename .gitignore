@@ -1,0 +1,203 @@
+# Automated Braking - .gitignore
+
+# =============================================================================
+# CRITICAL: Secrets and Sensitive Information
+# =============================================================================
+
+# Validated Patterns secrets (NEVER commit these!)
+values-secret.yaml
+values-secret-*.yaml
+**/values-secret.yaml
+**/values-secret-*.yaml
+
+# Kubernetes secrets
+*-credentials.yaml
+*-creds.yaml
+secrets/
+.secrets/
+
+# Environment files with credentials
+.env
+.env.*
+*.env
+
+# SSL/TLS certificates and keys
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# SSH keys
+id_rsa
+id_rsa.pub
+*.ppk
+
+# AWS credentials
+.aws/
+**/aws-credentials*
+
+# Ansible vault files (unless encrypted)
+vault.yml
+**/vault.yml
+
+# =============================================================================
+# Developer Notes and Local Files
+# =============================================================================
+
+# =============================================================================
+# Developer Notes Folder (Local Development Files)
+# =============================================================================
+
+# Entire dev-notes folder except README
+dev-notes/
+!dev-notes/README.md
+
+# MCP Server context (if still in root)
+.mcp-server-context.md
+*.mcp-context.md
+
+# Other developer scratch folders
+scratch/
+notes/
+.notes/
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.cursor/
+
+# =============================================================================
+# Build and Deployment Artifacts
+# =============================================================================
+
+# Helm charts (generated)
+*.tgz
+charts/*.tgz
+
+# Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Ansible
+*.retry
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# =============================================================================
+# Logs and Temporary Files
+# =============================================================================
+
+# Log files
+*.log
+logs/
+*.log.*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+*~
+
+# Deployment logs
+/tmp/vp-*.log
+/tmp/*-deploy.log
+
+# =============================================================================
+# Local Configuration and Testing
+# =============================================================================
+
+# Local kubeconfig (if copied)
+kubeconfig
+.kube/config
+*.kubeconfig
+
+# Local values overrides
+values-local.yaml
+values-dev.yaml
+**/values-local.yaml
+
+# Test files
+test-*.yaml
+*.test.yaml
+
+# =============================================================================
+# Operating System Files
+# =============================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =============================================================================
+# Git and Version Control
+# =============================================================================
+
+# Git merge/rebase backups
+*.orig
+
+# =============================================================================
+# Documentation Build Artifacts (if using static generators)
+# =============================================================================
+
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+node_modules/
+dist/
+build/
+
+# =============================================================================
+# ALLOWED: Templates and Documentation
+# =============================================================================
+
+# These ARE safe to commit (they're templates with placeholder values):
+# ✅ values-secret.yaml.template
+# ✅ README*.md (unless they contain real credentials)
+# ✅ docs/**/*.md
+# ✅ *.template
+# ✅ examples/
+
+# =============================================================================
+# Pattern-Specific Exclusions
+# =============================================================================
+
+# Validated Patterns UUID (optional - contains analytics ID)
+.config/validated-patterns/pattern-uuid
+
+# ArgoCD local state (if any)
+.argocd/
+

@@ -1,0 +1,67 @@
+---
+apiVersion: v1alpha1
+kind: Pattern
+metadata:
+  name: automated-braking
+  displayName: "Automated Braking ML System"
+  description: "ML-based automated braking distance prediction using Red Hat OpenShift AI"
+  version: "1.0.0"
+  
+spec:
+  framework: "openshift"
+  tier: "tested"
+  
+  # Cloud providers where this pattern has been tested
+  cloudProviders:
+    - name: aws
+      tested: true
+    - name: azure
+      tested: false
+    - name: gcp
+      tested: false
+  
+  # Required operators (already installed in our cluster)
+  operators:
+    - name: openshift-gitops-operator
+      namespace: openshift-gitops-operator
+      channel: latest
+      required: true
+      version: "1.15.4"
+    
+    - name: rhods-operator
+      namespace: redhat-ods-operator
+      channel: stable
+      required: true
+      version: "2.22.2"
+  
+  # Cluster groups (deployment topology)
+  clusterGroups:
+    - name: hub
+      description: "ML Pipeline and Model Registry Hub"
+      targetClusters:
+        - name: local-cluster
+          clusterSelector:
+            matchLabels:
+              clusterGroup: hub
+  
+  # Pattern capabilities
+  capabilities:
+    - "ML Pipeline Orchestration"
+    - "Model Registry"
+    - "Model Training"
+    - "Jupyter Workbenches"
+    - "GitOps Deployment"
+  
+  # Categories for pattern catalog
+  categories:
+    - "Machine Learning"
+    - "AI/ML Operations"
+    - "Data Science"
+    - "Edge Computing"
+  
+  # Links
+  links:
+    repository: "https://github.com/tosin2013/automated-braking"
+    documentation: "https://github.com/tosin2013/automated-braking/tree/main/docs"
+    adrs: "https://github.com/tosin2013/automated-braking/tree/main/docs/adrs"
+

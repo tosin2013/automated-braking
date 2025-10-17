@@ -1,0 +1,39 @@
+{{- if .Values.enabled }}
+{{- if .Values.initDB.enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-database
+  namespace: {{ .Values.namespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"  # After PostgreSQL deployment
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: {{ .Values.initDB.backoffLimit }}
+  template:
+    spec:
+      containers:
+      - name: create-database
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+          - /bin/bash
+        args:
+          - -ec
+          - |-
+            psql postgresql://{{ .Values.database.user }}:{{ .Values.database.password }}@{{ .Values.service.name }}:{{ .Values.service.port }}/{{ .Values.database.name }} < /etc/config/init.sql
+            sleep 15
+        volumeMounts:
+        - name: data-distance-prediction
+          mountPath: /etc/config/
+      restartPolicy: OnFailure
+      volumes:
+      - name: data-distance-prediction
+        configMap:
+          name: data-distance-prediction
+{{- end }}
+{{- end }}
+
+

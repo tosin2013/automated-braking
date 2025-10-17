@@ -1,0 +1,22 @@
+# GitLeaks Ignore File
+# Add false positives here
+
+# Template files are safe (they contain placeholders, not real secrets)
+values-secret.yaml.template
+
+# Documentation with example passwords
+README.md
+docs/**/*.md
+DEPLOYMENT_*.md
+MIGRATION_*.md
+
+# Helm chart values with commented default passwords (not actual secrets)
+# These will be overridden by values-secret.yaml at runtime
+charts/hub/minio/values.yaml:rootPassword
+charts/hub/postgresql/values.yaml:password
+
+# Old manifests directory (deprecated, kept for reference)
+manifests/base/database-creds.yaml
+manifests/base/mysql.yaml
+manifests/base/postgres.yaml
+

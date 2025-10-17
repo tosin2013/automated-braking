@@ -1,0 +1,80 @@
+---
+# DSPA values for Automated Braking Pattern
+enabled: true
+
+# DSPA metadata
+name: dspa
+namespace: distance-prediction
+
+# DSP version
+dspVersion: v2
+
+# API Server configuration
+apiServer:
+  deploy: true
+  enableSamplePipeline: false
+  enableOauth: true
+  cacheEnabled: true
+  pipelineStore: database
+  artifactSignedURLExpirySeconds: 60
+  stripEOF: true
+  terminateStatus: Cancelled
+  autoUpdatePipelineDefaultVersion: true
+  caBundleFileMountPath: ""
+  caBundleFileName: ""
+  
+  # Managed pipelines (InstructLab integration)
+  managedPipelines:
+    instructLab:
+      state: Removed
+
+# Database configuration (MariaDB)
+database:
+  disableHealthCheck: false
+  mariaDB:
+    deploy: true
+    pipelineDBName: mlpipeline
+    pvcSize: 10Gi
+    username: mlpipeline
+    # Password auto-generated or from secret
+
+# Object Storage (S3) configuration
+objectStorage:
+  disableHealthCheck: false
+  enableExternalRoute: false
+  externalStorage:
+    basePath: ""
+    bucket: pipeline-artifacts
+    # Host will be auto-discovered from MinIO route
+    # Format: minio-s3-<namespace>.apps.<cluster-domain>
+    host: ""  # Will be populated at runtime or use: minio-s3.distance-prediction.svc.cluster.local for internal
+    port: ""
+    region: us-east-1
+    scheme: https
+    s3CredentialsSecret:
+      accessKey: AWS_ACCESS_KEY_ID
+      secretKey: AWS_SECRET_ACCESS_KEY
+      secretName: aws-connection-pipeline-artifacts
+
+# Persistence Agent configuration
+persistenceAgent:
+  deploy: true
+  numWorkers: 2
+
+# Pod-to-Pod TLS
+podToPodTLS: true
+
+# Scheduled Workflow configuration
+scheduledWorkflow:
+  deploy: true
+  cronScheduleTimezone: UTC
+
+# Labels and annotations
+labels:
+  app: dspa
+  app.kubernetes.io/name: dspa
+  app.kubernetes.io/part-of: automated-braking
+
+annotations:
+  argocd.argoproj.io/sync-wave: "2"  # After MySQL and Model Registry
+

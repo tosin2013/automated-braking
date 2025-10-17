@@ -1,0 +1,59 @@
+---
+# MySQL values for Automated Braking Pattern
+enabled: true
+
+image:
+  repository: mysql
+  tag: "8.3.0"
+  pullPolicy: IfNotPresent
+
+# Database configuration
+database:
+  name: modelregistry
+  user: registryuser
+  # Password from secrets
+
+# Resource limits
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+# Persistent storage
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: ""  # Use default
+  accessMode: ReadWriteOnce
+
+# Service configuration
+service:
+  port: 3306
+  type: ClusterIP
+  name: mysql
+
+# MySQL arguments
+args:
+  - --datadir
+  - /var/lib/mysql/datadir
+  - --default-authentication-plugin=mysql_native_password
+
+# Labels and annotations
+labels:
+  app: mysql-data
+  app.kubernetes.io/component: mysql-data
+  app.kubernetes.io/instance: mysql-data
+  app.kubernetes.io/name: mysql-data
+  app.kubernetes.io/part-of: mysql-data
+  component: mysql-data
+
+annotations:
+  argocd.argoproj.io/sync-wave: "0"
+
+# Namespace
+namespace: distance-prediction
+
+

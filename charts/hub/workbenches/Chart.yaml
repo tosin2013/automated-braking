@@ -1,0 +1,19 @@
+apiVersion: v2
+name: workbenches
+description: Jupyter workbenches for ML development with RHOAI
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+home: https://github.com/tosin2013/automated-braking
+sources:
+  - https://github.com/tosin2013/automated-braking
+maintainers:
+  - name: Automated Braking Team
+keywords:
+  - jupyter
+  - workbench
+  - rhoai
+  - ml
+  - notebooks
+annotations:
+  category: Machine Learning

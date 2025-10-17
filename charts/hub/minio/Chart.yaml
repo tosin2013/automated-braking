@@ -1,0 +1,21 @@
+apiVersion: v2
+name: minio
+description: MinIO S3-compatible object storage for pipeline artifacts
+type: application
+version: 0.1.0
+appVersion: "RELEASE.2024-10-13T13-34-11Z"
+home: https://github.com/tosin2013/automated-braking
+sources:
+  - https://github.com/tosin2013/automated-braking
+  - https://min.io
+maintainers:
+  - name: Automated Braking Team
+keywords:
+  - minio
+  - s3
+  - object-storage
+  - artifacts
+annotations:
+  category: Storage
+
+
