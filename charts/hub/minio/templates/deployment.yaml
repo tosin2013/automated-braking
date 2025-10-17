@@ -42,13 +42,13 @@ spec:
             - name: MINIO_ROOT_USER
               valueFrom:
                 secretKeyRef:
-                  name: minio-root-credentials
-                  key: rootUser
+                  name: minio-secret
+                  key: MINIO_ROOT_USER
             - name: MINIO_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: minio-root-credentials
-                  key: rootPassword
+                  name: minio-secret
+                  key: MINIO_ROOT_PASSWORD
           ports:
             - name: api
               containerPort: {{ .Values.service.port }}
