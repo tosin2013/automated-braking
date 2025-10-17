@@ -110,3 +110,23 @@ This project uses the **MCP ADR Analysis Server** for:
 
 Last Updated: 2025-10-17
 
+
+## ADR-0007: MinIO S3 Storage External Exposure Strategy
+
+**Status**: Accepted | **Date**: 2025-10-17
+
+Defines the strategy for exposing MinIO S3 storage externally via OpenShift Routes while maintaining security and Validated Patterns alignment.
+
+**Key Decisions**:
+- Dual-endpoint exposure: Internal Service + External Routes
+- Both S3 API and Console accessible via TLS-terminated Routes
+- MinIO console served from S3 API endpoint (/minio/ui/*)
+- Routes properly configured to reference service ports by name
+- TLS edge termination automatic via OpenShift
+
+**Linked Components**:
+- Service: `charts/hub/minio/templates/service.yaml` (ports: s3=9000, console=9001)
+- Routes: `charts/hub/minio/templates/route.yaml` (both use s3 targetPort)
+
+**References**: [Full Decision Record](0007-minio-s3-external-exposure-strategy.md)
+
