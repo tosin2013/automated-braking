@@ -40,6 +40,8 @@ auth:
 route:
   enabled: true
   tls: true
+  # Apps domain for Route hosts (inherited from global values)
+  appsDomain: "apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com"
 
 # Resource limits
 resources:

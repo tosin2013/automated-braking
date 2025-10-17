@@ -1,7 +1,7 @@
 {{- if .Values.enabled }}
 {{- if .Values.route.enabled }}
 ---
-# MinIO S3 API Route - External access to S3 API
+# S3 API Route
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -15,9 +15,11 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  host: minio-s3-{{ .Values.namespace | default "distance-prediction" }}.apps.{{ .Values.appsDomain | default "cluster.local" }}
+  # Route host: <route-name>-<namespace>.apps.<apps-domain>
+  # Uses appsDomain variable for cluster portability
+  host: minio-s3-{{ .Values.namespace | default "distance-prediction" }}.apps.{{ .Values.route.appsDomain | default "cluster.local" }}
   port:
-    targetPort: s3  # MinIO S3 API on port 9000
+    targetPort: s3        # MinIO S3 API on port 9000
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
@@ -27,9 +29,7 @@ spec:
     weight: 100
   wildcardPolicy: None
 ---
-# MinIO Console Route - Web UI and console access
-# Note: MinIO serves the console from the same S3 API endpoint
-# Browser requests to /minio/ui/* are handled by MinIO itself
+# Console Route (MinIO console served from S3 API endpoint)
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
@@ -43,9 +43,11 @@ metadata:
     {{ $key }}: {{ $val | quote }}
     {{- end }}
 spec:
-  host: minio-console-{{ .Values.namespace | default "distance-prediction" }}.apps.{{ .Values.appsDomain | default "cluster.local" }}
+  # Route host: <route-name>-<namespace>.apps.<apps-domain>
+  # Uses appsDomain variable for cluster portability
+  host: minio-console-{{ .Values.namespace | default "distance-prediction" }}.apps.{{ .Values.route.appsDomain | default "cluster.local" }}
   port:
-    targetPort: s3  # Console is served from S3 API (port 9000)
+    targetPort: s3  # Console served from S3 API (port 9000)
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect

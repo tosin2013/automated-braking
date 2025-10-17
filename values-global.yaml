@@ -17,6 +17,9 @@ global:
   datacenter:
     clustername: cluster-fzqdg
     domain: fzqdg.sandbox3272.opentlc.com
+    # Apps domain for Route/Ingress (derived from clustername + domain)
+    # Format: apps.cluster-<name>.<base-domain>
+    appsDomain: apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
   
   # Image registry settings
   imageRegistry:
