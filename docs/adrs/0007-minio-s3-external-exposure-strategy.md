@@ -91,17 +91,43 @@ oc get svc minio -n distance-prediction
 # minio   ClusterIP   172.30.70.228    9000/TCP,9001/TCP
 
 # External Routes (TLS-terminated)
+# Note: Routes use the cluster's ingress domain (NOT .local domain)
 oc get routes -n distance-prediction | grep minio
-# minio-s3          minio-s3-distance-prediction.apps...         9000/TCP    edge/Redirect
-# minio-console     minio-console-distance-prediction.apps...    9001/TCP    edge/Redirect
+# minio-s3          minio-s3-distance-prediction.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com    edge/Redirect
+# minio-console     minio-console-distance-prediction.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com    edge/Redirect
 
-# Test external connectivity
-curl -kvvv https://minio-s3-distance-prediction.apps.cluster-fzqdg... 
-# Should show 200 OK or appropriate S3 response
+# IMPORTANT: Domain Naming Convention
+# OpenShift routes use: <route-name>-<namespace>.apps.<ingress-domain>
+# Example ingress domain: cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
+# Full URL: https://minio-console-distance-prediction.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
+#
+# NOTE: "cluster.local" is an internal Kubernetes DNS alias
+# For external access, always use the full ingress domain (ends with .opentlc.com, .com, etc.)
 
-# Test console
-https://minio-console-distance-prediction.apps.cluster-fzqdg...
-# Accessible via browser
+# Test external connectivity (use actual ingress domain)
+INGRESS_DOMAIN=$(oc get ingresscontroller -n openshift-ingress-operator -o jsonpath='{.items[0].status.domain}')
+curl -kvvv https://minio-console-distance-prediction.apps.${INGRESS_DOMAIN}
+# Should show 200 OK or MinIO HTML response
+
+# Access the console in browser
+https://minio-console-distance-prediction.apps.${INGRESS_DOMAIN}
+# Login with: minio / minio123
+```
+
+### Access Points (Production Example)
+
+```
+Internal In-Cluster Access:
+  S3 API: minio.distance-prediction.svc.cluster.local:9000
+  S3 API: minio.distance-prediction.svc:9000
+
+External Access via Route (Actual FQDN):
+  Console: https://minio-console-distance-prediction.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
+  S3 API: https://minio-s3-distance-prediction.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
+
+Credentials:
+  Username: minio
+  Password: minio123
 ```
 
 ## Implementation
@@ -112,7 +138,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: minio
-  namespace: {{ .Values.namespace }}
+  namespace: {{ .Values.namespace | default "distance-prediction" }}
   labels:
     app: minio
 spec:
@@ -130,14 +156,18 @@ spec:
 
 ### Routes Template: `charts/hub/minio/templates/route.yaml`
 ```yaml
+{{- if .Values.enabled }}
 {{- if .Values.route.enabled }}
 ---
+# S3 API Route
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: minio-s3
+  namespace: {{ .Values.namespace | default "distance-prediction" }}
 spec:
-  host: minio-s3-{{ .Values.namespace }}.apps...
+  # Route URL will be: minio-s3-<namespace>.apps.<ingress-domain>
+  # Example: minio-s3-distance-prediction.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
   port:
     targetPort: s3        # References service port name
   to:
@@ -145,21 +175,67 @@ spec:
     name: minio
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
 ---
+# Console Route (MinIO console served from S3 API endpoint)
 apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: minio-console
+  namespace: {{ .Values.namespace | default "distance-prediction" }}
 spec:
-  host: minio-console-{{ .Values.namespace }}.apps...
+  # Route URL will be: minio-console-<namespace>.apps.<ingress-domain>
+  # Example: minio-console-distance-prediction.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
   port:
-    targetPort: console   # References service port name
+    targetPort: s3  # Console served from S3 API (port 9000)
   to:
     kind: Service
     name: minio
   tls:
     termination: edge
+    insecureEdgeTerminationPolicy: Redirect
 {{- end }}
+{{- end }}
+```
+
+## Domain Naming in OpenShift Routes
+
+### Key Concepts
+
+1. **Route Name Format**:
+   - Route name: `minio-console`
+   - Namespace: `distance-prediction`
+   - Route URL: `minio-console-distance-prediction.apps.<ingress-domain>`
+
+2. **Ingress Domain** (discovered from cluster):
+   ```bash
+   oc get ingresscontroller -n openshift-ingress-operator -o jsonpath='{.items[0].status.domain}'
+   # Output: cluster-fzqdg.fzqdg.sandbox3272.opentlc.com
+   ```
+
+3. **DNS Resolution**:
+   - `.local` domains (e.g., `minio-console-distance-prediction.apps.cluster.local`): Internal Kubernetes DNS
+   - `.opentlc.com` or public domains: External OpenShift ingress controller
+   - External access requires the full ingress domain
+
+4. **TLS Certificates**:
+   - OpenShift generates wildcard certificates for `*.apps.<ingress-domain>`
+   - All routes under this domain automatically get valid HTTPS certificates
+   - Example: `*.apps.cluster-fzqdg.fzqdg.sandbox3272.opentlc.com`
+
+### Testing URL Accessibility
+
+```bash
+# Get ingress domain
+INGRESS_DOMAIN=$(oc get ingresscontroller -n openshift-ingress-operator -o jsonpath='{.items[0].status.domain}')
+
+# Verify external access
+curl -k https://minio-console-distance-prediction.apps.${INGRESS_DOMAIN}
+# Should respond with 200 or MinIO HTML
+
+# Check certificate validity
+curl -v https://minio-console-distance-prediction.apps.${INGRESS_DOMAIN} 2>&1 | grep -E "subject:|CN="
+# Should show valid OpenShift wildcard certificate
 ```
 
 ## Alternatives Considered
